@@ -99,6 +99,12 @@ https://www.kaggle.com/datasets/ayushbuchu/hand-written-text-recognition
 
 ---
 
+## Trained Model
+
+https://www.kaggle.com/models/ayushbuchu/hindi-handwritten-text-recognition-model
+
+---
+
 ## Model Details
 
 | Property | Value |
