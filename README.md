@@ -86,18 +86,6 @@ The app expects `major_project_trained_model.keras` (PyTorch checkpoint) in the 
 
 ---
 
-## Requirements
-
-```
-streamlit>=1.35.0
-torch>=2.1.0
-torchvision>=0.16.0
-timm>=0.9.0
-opencv-python-headless>=4.8.0
-numpy>=1.24.0
-Pillow>=10.0.0
-pandas>=2.0.0
-```
 
 ---
 
