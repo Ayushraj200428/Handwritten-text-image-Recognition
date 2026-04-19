@@ -1,8 +1,6 @@
-# Hindi Handwriting OCR
+# Hindi Handwriting Text Recognition
 
 A deep learning system for recognizing handwritten Hindi (Devanagari script) text, built with a hybrid **CNN + Vision Transformer (ViT)** architecture and trained using **CTC loss**.
-
-Live demo → deploy on [Streamlit Cloud](https://streamlit.io/cloud) using `app.py`.
 
 ---
 
@@ -49,12 +47,9 @@ Every image (upload or webcam) goes through the same pipeline used during traini
 
 ## Project Structure
 
-```
-├── app.py                          # Streamlit web app
+```                          
 ├── Major_Project.ipynb             # Training notebook
 ├── On_hindi_dataset_fixed.ipynb    # Dataset exploration
-├── hindi_ocr_static.py             # Static dataset inference script
-├── requirements.txt                # Python dependencies
 ├── NotoSansDevanagari-Regular.ttf  # Font for Devanagari rendering
 └── README.md
 ```
