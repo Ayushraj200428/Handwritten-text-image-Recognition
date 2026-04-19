@@ -93,6 +93,10 @@ jupyter notebook Major_Project.ipynb
 
 ---
 
+## Dataset
+
+https://www.kaggle.com/datasets/ayushbuchu/hand-written-text-recognition
+
 ## Model Details
 
 | Property | Value |
