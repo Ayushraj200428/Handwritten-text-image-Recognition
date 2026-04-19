@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.env
+venv/
+env/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Large dataset/image files — do not push
+train/
+test/
+*.png
+*.jpg
+*.jpeg
+
+# Parquet datasets — large, do not push
+*.parquet
+
+# Model weights — large, host separately (HuggingFace / Drive)
+*.keras
+*.pth
+*.pt
+*.h5
+
+# OS
+.DS_Store
+Thumbs.db
