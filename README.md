@@ -1,4 +1,4 @@
-# Hindi Handwriting OCR
+# Handwriting Text Recognition 
 
 A deep learning project for recognizing handwritten Hindi (Devanagari script) using a hybrid **CNN + Vision Transformer (ViT)** architecture trained with **CTC loss**.
 
