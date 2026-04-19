@@ -1,108 +1,105 @@
-# Hindi Handwriting Text Recognition
+# Hindi Handwriting OCR
 
-A deep learning system for recognizing handwritten Hindi (Devanagari script) text, built with a hybrid **CNN + Vision Transformer (ViT)** architecture and trained using **CTC loss**.
+A deep learning project for recognizing handwritten Hindi (Devanagari script) using a hybrid **CNN + Vision Transformer (ViT)** architecture trained with **CTC loss**.
 
 ---
 
-## How It Works
+## Files in this Repository
+
+| File | Description |
+|------|-------------|
+| `Major_Project.ipynb` | Main notebook — model definition, training loop, and inference |
+| `On_hindi_dataset_fixed.ipynb` | Dataset exploration and preprocessing analysis |
+| `NotoSansDevanagari-Regular.ttf` | Font file used to render Devanagari text in output overlays |
+| `.gitignore` | Excludes datasets, model weights, images, and cache files |
+
+---
+
+## Project Overview
+
+This project recognizes handwritten Hindi words from images. It uses a hybrid deep learning architecture combining a CNN for local feature extraction and a Vision Transformer (ViT) for sequence modeling, trained end-to-end with CTC loss.
 
 ### Architecture
 
 ```
-Input Image (64×256 grayscale)
+Input Image (64 × 256 grayscale)
         ↓
-CNN Feature Extractor        ← 3 conv blocks, extracts local stroke features
+CNN Feature Extractor
+  └─ 3 convolutional blocks (Conv → BN → ReLU → MaxPool)
         ↓
-Token Embedding              ← patch projection (Conv2d, patch_size=4)
+Token Embedding
+  └─ Patch projection via Conv2d (patch_size = 4)
         ↓
-Positional Encoding          ← learnable position embeddings
+Positional Encoding
+  └─ Learnable position embeddings
         ↓
-Vision Transformer Encoder   ← 6 transformer layers, 6 attention heads
+Vision Transformer Encoder
+  └─ 6 transformer layers, 6 attention heads
         ↓
-CTC Prediction Head          ← linear → 109 Devanagari character classes
+CTC Prediction Head
+  └─ Linear → 109 Devanagari character classes
         ↓
-Greedy CTC Decode            → predicted Hindi text + confidence score
+Greedy CTC Decode → predicted Hindi text + confidence score
 ```
 
 ### Preprocessing Pipeline
 
-Every image (upload or webcam) goes through the same pipeline used during training:
+Every image goes through the same pipeline during both training and inference:
 
 1. Convert to grayscale
-2. CLAHE contrast enhancement (clipLimit=2.0)
-3. Aspect-ratio preserving resize with white padding → 64×256
-4. Normalize to [0, 1]
+2. CLAHE contrast enhancement (`clipLimit=2.0`)
+3. Aspect-ratio preserving resize with white padding → `64 × 256`
+4. Normalize pixel values to `[0, 1]`
 
 ### CTC Decoding
 
-- Greedy decode: argmax over timesteps
-- Collapse consecutive identical tokens, remove blanks
-- Confidence = `exp(mean log-prob of emitted non-blank characters)`
+- Greedy decode: argmax over all timesteps
+- Collapse consecutive identical tokens, then remove blank tokens
+- Confidence score = `exp(mean log-probability of emitted non-blank characters)`
 
 ### Character Set
 
-109 classes covering the full Devanagari Unicode block — vowels, consonants, matras, conjuncts, digits, punctuation, and a `<BLANK>` token for CTC.
+109 classes covering the full Devanagari Unicode block:
+- Vowels, consonants, matras, conjuncts
+- Digits (०–९)
+- Punctuation (। ॥)
+- `<BLANK>` token for CTC
 
 ---
 
-## Project Structure
+## How to Run
 
-```                          
-├── Major_Project.ipynb             # Training notebook
-├── On_hindi_dataset_fixed.ipynb    # Dataset exploration
-├── NotoSansDevanagari-Regular.ttf  # Font for Devanagari rendering
-└── README.md
-```
-
----
-
-## Running Locally
+### 1. Install dependencies
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the Streamlit app
-streamlit run app.py
+pip install torch torchvision timm opencv-python-headless numpy pillow pandas tqdm
 ```
 
-The app expects `major_project_trained_model.keras` (PyTorch checkpoint) in the same directory. If not found, it runs with untrained weights and shows a warning.
+### 2. Open the notebook
+
+```bash
+jupyter notebook Major_Project.ipynb
+```
+
+### 3. Choose a mode when prompted
+
+```
+1. Train from scratch
+2. Load model + run inference
+3. Train then run inference
+```
+
+> The notebook expects `sikhna.parquet` (train) and `pariksha.parquet` (test) datasets, and saves the trained model as `major_project_trained_model.keras` (PyTorch checkpoint despite the extension).
 
 ---
 
-## Deploying on Streamlit Cloud
+## Model Details
 
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io) → New app
-3. Select your repo, set main file to `app.py`
-4. Deploy
-
-> **Note:** The trained model file (`major_project_trained_model.keras`) is a PyTorch checkpoint (~93 MB). GitHub blocks files >100 MB. If yours exceeds that, host it on [HuggingFace Hub](https://huggingface.co) or Google Drive and add a download snippet at the top of `app.py`:
-> ```python
-> import urllib.request
-> if not Path("major_project_trained_model.keras").exists():
->     urllib.request.urlretrieve("YOUR_DIRECT_URL", "major_project_trained_model.keras")
-> ```
-
----
-
-
----
-
-## Dataset
-
-Trained on Hindi handwriting parquet datasets:
-- `sikhna.parquet` — training set
-- `pariksha.parquet` — test set
-
-Each row contains a handwritten word image (bytes) and its ground truth text label.
-
----
-
-## Model Performance
-
-| Metric | Value |
-|--------|-------|
+| Property | Value |
+|----------|-------|
+| Parameters | ~24.5 million |
+| Model size | ~93 MB |
+| Input size | 64 × 256 grayscale |
+| Output classes | 109 Devanagari characters |
 | Best epoch | 12 |
-| Test CTC loss | 0.4250 |
-| Parameters | ~24.5M (~93 MB) |
+| Best test CTC loss | 0.4250 |
